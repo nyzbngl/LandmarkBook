@@ -13,6 +13,9 @@ class ViewController: UIViewController , UITableViewDelegate , UITableViewDataSo
     //Bu değişkenleri viewDidLoad da değilde direkt olarak class ın altında yazarsak heryerden ulaşılabilir hale geleceklerdir.
     var landmarkNames = [String]()
     var landmarkImages = [UIImage]()
+    var chosenLandmarkName = ""
+    var chosenLandmarkImage = UIImage()
+    
 
     @IBOutlet weak var tableView: UITableView!
     
@@ -38,6 +41,9 @@ class ViewController: UIViewController , UITableViewDelegate , UITableViewDataSo
         landmarkImages.append(UIImage(named: "BodrumKalesi")!)
         landmarkImages.append(UIImage(named: "Colosseum")!)
         landmarkImages.append(UIImage(named: "DenizliHorozu")!)
+        
+        //Telefon ekranında yukarıda çıkan back tuşunun olduğu navigation barına Başlık atmak için kullanılır.
+        navigationItem.title = "Landmark Book"
         
         
     }
@@ -65,8 +71,28 @@ class ViewController: UIViewController , UITableViewDelegate , UITableViewDataSo
         return landmarkNames.count
         //Üstteki return landmarkNames.count kodu girilen değişken isimlerinin sayısı kadar row olması gerektiğini anlatır.
         
-        
     }
+    
+    //Aşağıdaki koda didselect yazarak ulaşabiliyoruz. Bu kod row lardaki yazılara tıklandığında ImageViewController a geçmeyi sağlamaktadır.
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        chosenLandmarkName = landmarkNames[indexPath.row]
+        chosenLandmarkImage = landmarkImages[indexPath.row]
+        
+        
+        performSegue(withIdentifier: "toImageViewController", sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        //Burada segue olmadan yapılacak işlem tanımlanır.
+        if segue.identifier == "toImageViewController" {
+            
+            //Burada ise diğer imageView u bir değişkene tanımlamak gerekir.
+            let destinationVC = segue.destination as! imageViewController //Buradaki destination gidilecek olan viewController (Hedef)
+            destinationVC.selectedLandmarkName = chosenLandmarkName
+            destinationVC.selectedLandmarkImage = chosenLandmarkImage
+            
+        }
 
 }
 
+}
